@@ -104,7 +104,7 @@ function buildChart(start, end, daysPerStep) {
 
     dates.forEach(date => {
         var promise =
-            d3.csv('https://raw.githubusercontent.com/statinsight/PopularGHBranchNames/master/data/' + "2020-10-22" /*date*/ + '.csv')
+            d3.csv('https://raw.githubusercontent.com/statinsight/PopularGHBranchNames/master/data/' + date + '.csv')
                 .then(d => {
                     dateFetchSuccessCounter++;
                     setFetchStatus(dateFetchSuccessCounter, dateFetchFailedCounter, dates.length);
