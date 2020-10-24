@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Popular GH BranchNames Visualizer</title>
+        <meta charset="utf-8">
+        <script src="index.js"></script>
+        <script src="lib/d3.v6.min.js"></script>
+        <script src="lib/palette.js"></script>
+        <script src="lib/chartjs.min.js"></script>
+        <style>
+            html {
+                height: 100%;
+                min-height: 100%;
+            }
+            body {
+                margin: 8px;
+                height: calc(100% - 16px);
+                display: flex;
+                flex-direction: column;
+            }
+            .inputs {
+                flex: 0 1 content;
+            }
+            .wrapper {
+                position: relative;
+                flex: 1 1 auto;
+                min-height: 0;
+            }
+        </style>
+    </head>
+    <body>
+        <div class="inputs">
+            <form onsubmit="updateChart(); return false;">
+                <table border="0">
+                    <tr>
+                        <td>
+                            <label>Start</label>
+                        </td>
+                        <td>
+                            <label>End</label>
+                        </td>
+                        <td>
+                            <label>Days per Step</label>
+                        </td>
+                        <td></td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <input type="date" id="start" name="start">
+                        </td>
+                        <td>
+                            <input type="date" id="end" name="end">
+                        </td>
+                        <td>
+                            <input type="number" id="daysPerStep" name="daysPerStep" style="width: 4em;">
+                        </td>
+                        <td>
+                            <button type="button" id="updatebtn" onclick="updateChart()">Update</button>
+                        </td>
+                    </tr>
+                </table>
+            </form>
+            <span id="status"></span>
+        </div>
+        <div class="wrapper">
+            <canvas id="canvas"></canvas>
+        </div>
+    </body>
+</html>
