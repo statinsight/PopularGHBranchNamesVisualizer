@@ -9,7 +9,7 @@ var config = {
         maintainAspectRatio: false,
         title: {
             display: true,
-            text: 'Most popular GH Repository Branches'
+            text: 'Most popular GH Repository Branches (with each repo > 1000 🌠)'
         },
         scales: {
             xAxes: [{
