@@ -1,4 +1,4 @@
-# PopularGHBranchNamesVisualizer
+# PopularGHBranchNamesVisualizer [![Website](https://img.shields.io/website?url=https%3A%2F%2Fstatinsight.github.io%2FPopularGHBranchNamesVisualizer%2F)](https://statinsight.github.io/PopularGHBranchNamesVisualizer/)
 Visualizes the data of [statinsight/PopularGHBranchNames](https://github.com/statinsight/PopularGHBranchNames)
 
 ## Fine Tuning
