@@ -1,3 +1,4 @@
+let queryParams = {};
 var config = {
     type: 'line',
     data: {
@@ -11,9 +12,15 @@ var config = {
             display: true,
             text: 'Most popular GH Repository Branches (with each repo > 1000 🌠)'
         },
+        legend: {
+            labels: {}
+        },
         scales: {
             xAxes: [{
                 display: true,
+                pointLabels: {},
+                gridLines: {},
+                ticks: {},
             }],
             yAxes: [{
                 display: true,
@@ -31,6 +38,9 @@ var config = {
     }
 };
 
+let chartElement;
+let statusElement;
+
 Date.prototype.addDays = function(days) {
     var date = new Date(this.valueOf());
     date.setDate(date.getDate() + days);
@@ -41,13 +51,57 @@ window.onload = function() {
     init();
 };
 
+
+(window.onpopstate = function () {
+    let match,
+        pl = /\+/g,  // Regex for replacing addition symbol with a space
+        search = /([^&=]+)=?([^&]*)/g,
+        decode = function (s) {
+            return decodeURIComponent(s.replace(pl, " "));
+        },
+        query = window.location.search.substring(1);
+
+    while (match = search.exec(query)) {
+        if (decode(match[1]) in queryParams) {
+            if (!Array.isArray(queryParams[decode(match[1])])) {
+                queryParams[decode(match[1])] = [queryParams[decode(match[1])]];
+            }
+            queryParams[decode(match[1])].push(decode(match[2]));
+        } else {
+            queryParams[decode(match[1])] = decode(match[2]);
+        }
+    }
+})();
+
 function init() {
+    statusElement = document.getElementById('status');
+    chartElement = document.getElementById('chart');
+
     var priorDate = new Date();
     priorDate.setDate(new Date().getDate()-90);
 
-    document.getElementById('start').value = priorDate.toLocaleString('en-us', {year: 'numeric', month: '2-digit', day: '2-digit'}).replace(/(\d+)\/(\d+)\/(\d+)/, '$3-$1-$2');
-    document.getElementById('end').value = new Date().toLocaleString('en-us', {year: 'numeric', month: '2-digit', day: '2-digit'}).replace(/(\d+)\/(\d+)\/(\d+)/, '$3-$1-$2');
-    document.getElementById('daysPerStep').value = 1;
+    if(queryParams.hasOwnProperty('hideconfig') || queryParams.hasOwnProperty('fullscreen')) {
+        document.getElementById('config').hidden = true;
+    }
+
+    document.getElementById('start').value = queryParams['start'] ?? priorDate.toLocaleString('en-us', {year: 'numeric', month: '2-digit', day: '2-digit'}).replace(/(\d+)\/(\d+)\/(\d+)/, '$3-$1-$2');
+    document.getElementById('end').value = queryParams['end'] ?? new Date().toLocaleString('en-us', {year: 'numeric', month: '2-digit', day: '2-digit'}).replace(/(\d+)\/(\d+)\/(\d+)/, '$3-$1-$2');
+    document.getElementById('daysPerStep').value = queryParams['step'] ?? 1;
+	
+	if(queryParams.hasOwnProperty('searchnow')) {
+        updateChart();
+    }
+
+    if (queryParams['theme'] == 'light') {
+        setTheme('light');
+    }
+    else if (queryParams['theme'] == 'dark' || window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
+        setTheme('dark');
+    }
+}
+
+function setTheme(theme) {
+    document.documentElement.setAttribute('data-theme', theme);
 }
 
 function updateChart() {
@@ -58,8 +112,18 @@ function updateChart() {
     updateBtn.disabled = false;
 }
 
+function showStatus() {
+    statusElement.hidden = false;
+    chartElement.hidden = true;
+}
+
+function hideStatus() {
+    statusElement.hidden = true;
+    chartElement.hidden = false;
+}
+
 function setStatus(status) {
-    document.getElementById('status').innerText = status;
+    statusElement.innerText = status;
 }
 
 function setFetchStatus(successCounter, failedCounter, allCounter) {
@@ -78,6 +142,7 @@ function buildChart(start, end, daysPerStep) {
         daysPerStep = 1;
     }
 
+    showStatus();
     setStatus("Updating...");
 
     var ctx = document.getElementById('canvas').getContext('2d');
@@ -169,6 +234,22 @@ function buildChart(start, end, daysPerStep) {
 
         setStatus("Building chart...");
 
+        
+        if(document.documentElement.getAttribute('data-theme') == 'dark') {
+            let compstyle = getComputedStyle(document.documentElement);
+
+            let textcolor = compstyle.getPropertyValue('--text-color');
+            let gridLineColor = 'rgb(130,130,130)';
+
+            config.options.title.fontColor = textcolor;
+            config.options.legend.labels.fontColor = textcolor;
+
+            [config.options.scales.yAxes[0], config.options.scales.xAxes[0]].forEach(axis => {
+                axis.ticks.fontColor = textcolor;
+                axis.gridLines.color = gridLineColor;
+            });
+        }
+
         config.options.scales.yAxes[0].ticks.min = minCount;
         config.data = {
             labels: dates,
@@ -177,8 +258,10 @@ function buildChart(start, end, daysPerStep) {
 
         window.lineChart = new Chart(ctx, config);
 
-        setStatus("Done");
+        hideStatus();
     }, function(err) {
+        showStatus();
+        setStatus('Error: ' + err);
         console.log("Error processing promises")
         console.error(err);
     });
@@ -212,4 +295,13 @@ function dynamicSort(property) {
         var result = (a[property] < b[property]) ? -1 : (a[property] > b[property]) ? 1 : 0;
         return result * sortOrder;
     }
+}
+
+function getQueryParameterByName(name, url = window.location.href) {
+    name = name.replace(/[\[\]]/g, '\\$&');
+    var regex = new RegExp('[?&]' + name + '(=([^&#]*)|&|#|$)'),
+        results = regex.exec(url);
+    if (!results) return null;
+    if (!results[2]) return '';
+    return decodeURIComponent(results[2].replace(/\+/g, ' '));
 }
