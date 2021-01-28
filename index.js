@@ -88,7 +88,7 @@ function init() {
     document.getElementById('end').value = queryParams['end'] ?? new Date().toLocaleString('en-us', {year: 'numeric', month: '2-digit', day: '2-digit'}).replace(/(\d+)\/(\d+)\/(\d+)/, '$3-$1-$2');
     document.getElementById('daysPerStep').value = queryParams['step'] ?? 1;
 	
-	if(queryParams.hasOwnProperty('searchnow')) {
+	if(queryParams.hasOwnProperty('searchnow') || queryParams.hasOwnProperty('exec')) {
         updateChart();
     }
 
