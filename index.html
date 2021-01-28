@@ -13,19 +13,42 @@
                 --mode: white;
                 --bkg-color:white;
                 --text-color: black;
+
+                --link-unclicked: blue;
+                --link-active: red;
+                --link-visited: rgb(85, 26, 139);
             }
 
             /* Dark mode */
             [data-theme="dark"] {
                 --mode: black;
                 --bkg-color: rgb(30,30,30);
-                --text-color: rgb(225, 225, 225);
+                --text-color: rgb(220, 220, 220);
+
+                --link-unclicked: #00bfbf;
+                --link-active: darkorange;
+                --link-visited: rgb(209, 159, 255);
             }
 
             html, body, table, tr, td, input, button {
                 background-color: var(--bkg-color);
                 color: var(--text-color);
             }
+            a:link {
+                color: var(--link-unclicked);
+            }
+
+            a:active {
+                color: var(--link-active);
+            }
+
+            a:visited {
+                color: var(--link-visited);
+            }
+            a, button {
+                cursor: pointer;
+            }
+
 
             html {
                 height: 100%;
@@ -39,6 +62,9 @@
             }
             .inputs {
                 flex: 0 1 content;
+                display: flex;
+                flex-direction: row;
+                justify-content: space-between;
             }
             .content {
                 display: flex;
@@ -84,6 +110,7 @@
                     </tr>
                 </table>
             </form>
+            <a href="https://github.com/statinsight/PopularGHBranchNamesVisualizer#fine-tuning">Fine Tuning</a>
         </div>
         <div id="content" class="content">
             <span id="status" hidden="true"></span>
