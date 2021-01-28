@@ -4,7 +4,7 @@ Visualizes the data of [statinsight/PopularGHBranchNames](https://github.com/sta
 ## Fine Tuning
 | Queryparameter | Description | Values |
 | --- | --- | --- |
-| ``searchnow`` | Executes the search when the page is loaded | - |
+| ``searchnow``<br>``exec`` | Executes the search when the page is loaded | - |
 | ``hideconfig``<br>``fullscreen`` | Hides the config / Fullscreen mode | - |
 | ``theme`` | Overrides the theming | ``light``,``dark`` |
 | ``start`` | Sets the start date into the config | ``2020-01-01`` |
