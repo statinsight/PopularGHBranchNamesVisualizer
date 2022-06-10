@@ -164,8 +164,6 @@ function buildChart(start, end, daysPerStep) {
                 .replace(/(\d+)\/(\d+)\/(\d+)/, '$3-$1-$2')
             );
 
-    console.log(dates);
-
     var dateFetchSuccessCounter = 0;
     var dateFetchFailedCounter = 0;
     setFetchStatus(dateFetchSuccessCounter, dateFetchFailedCounter, dates.length);
