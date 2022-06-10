@@ -40,6 +40,7 @@ var config = {
 
 let chartElement;
 let statusElement;
+let colorScheme;
 
 Date.prototype.addDays = function(days) {
     var date = new Date(this.valueOf());
@@ -87,6 +88,8 @@ function init() {
     document.getElementById('start').value = queryParams['start'] ?? priorDate.toLocaleString('en-us', {year: 'numeric', month: '2-digit', day: '2-digit'}).replace(/(\d+)\/(\d+)\/(\d+)/, '$3-$1-$2');
     document.getElementById('end').value = queryParams['end'] ?? new Date().toLocaleString('en-us', {year: 'numeric', month: '2-digit', day: '2-digit'}).replace(/(\d+)\/(\d+)\/(\d+)/, '$3-$1-$2');
     document.getElementById('daysPerStep').value = queryParams['step'] ?? 1;
+
+    colorScheme = queryParams['scheme'] ?? queryParams['colorscheme'] ?? 'tol-rainbow'
 	
 	if(queryParams.hasOwnProperty('searchnow') || queryParams.hasOwnProperty('exec')) {
         updateChart();
@@ -211,7 +214,7 @@ function buildChart(start, end, daysPerStep) {
             });
         });
         
-        var colors = palette('tol', branchDataMap.size).map(hex => '#' + hex);
+        var colors = palette(colorScheme, branchDataMap.size).map(hex => '#' + hex);
         var dataSets = [];
         for (var [key, value] of branchDataMap.entries()) {
 
