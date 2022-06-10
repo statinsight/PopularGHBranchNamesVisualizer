@@ -108,10 +108,26 @@ function setTheme(theme) {
 }
 
 function updateChart() {
-    var updateBtn = document.getElementById('updatebtn');
+    let updateBtn = document.getElementById('updatebtn');
 
     updateBtn.disabled = true;
-    buildChart(new Date(document.getElementById('start').value), new Date(document.getElementById('end').value), Number.parseInt(document.getElementById('daysPerStep').value));
+
+    let start = new Date(document.getElementById('start').value);
+    let end = new Date(document.getElementById('end').value);
+    let daysPerStep = Number.parseInt(document.getElementById('daysPerStep').value);
+
+    // Check if inputs are valid and fix if necessary
+    if(start > end) {
+        start = end;
+        document.getElementById('start').value = start.toISOString().slice(0, 10);
+    }
+    if(!daysPerStep || daysPerStep < 1) {
+        daysPerStep = 1;
+        document.getElementById('daysPerStep').value = daysPerStep;
+    }
+
+    buildChart(start, end, daysPerStep);
+
     updateBtn.disabled = false;
 }
 
@@ -140,11 +156,6 @@ function setFetchStatus(successCounter, failedCounter, allCounter) {
 }
 
 function buildChart(start, end, daysPerStep) {
-
-    if(!daysPerStep || daysPerStep < 1) {
-        daysPerStep = 1;
-    }
-
     showStatus();
     setStatus("Updating...");
 
@@ -191,7 +202,13 @@ function buildChart(start, end, daysPerStep) {
 
     Promise.all(promises).then(function() {
 
-        setStatus("Processing date...");
+        if(!dateData || dateData.length == 0) {
+            showStatus();
+            setStatus('No data to display. Is the configuration valid?');
+            return;
+        }
+
+        setStatus("Processing dates...");
 
         dateData.sort(dynamicSort("date"));
 
