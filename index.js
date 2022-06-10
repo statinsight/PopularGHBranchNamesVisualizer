@@ -79,7 +79,7 @@ function init() {
     chartElement = document.getElementById('chart');
 
     var priorDate = new Date();
-    priorDate.setDate(new Date().getDate()-90);
+    priorDate.setDate(new Date().getDate()-365);
 
     if(queryParams.hasOwnProperty('hideconfig') || queryParams.hasOwnProperty('fullscreen')) {
         document.getElementById('config').hidden = true;
@@ -87,7 +87,7 @@ function init() {
 
     document.getElementById('start').value = queryParams['start'] ?? priorDate.toLocaleString('en-us', {year: 'numeric', month: '2-digit', day: '2-digit'}).replace(/(\d+)\/(\d+)\/(\d+)/, '$3-$1-$2');
     document.getElementById('end').value = queryParams['end'] ?? new Date().toLocaleString('en-us', {year: 'numeric', month: '2-digit', day: '2-digit'}).replace(/(\d+)\/(\d+)\/(\d+)/, '$3-$1-$2');
-    document.getElementById('daysPerStep').value = queryParams['step'] ?? 1;
+    document.getElementById('daysPerStep').value = queryParams['step'] ?? 7;
 
     colorScheme = queryParams['scheme'] ?? queryParams['colorscheme'] ?? 'tol-rainbow'
 	
