@@ -93,6 +93,7 @@ function init() {
     document.getElementById('start').value = queryParams['start'] ?? priorDate.toLocaleString('en-us', {year: 'numeric', month: '2-digit', day: '2-digit'}).replace(/(\d+)\/(\d+)\/(\d+)/, '$3-$1-$2');
     document.getElementById('end').value = queryParams['end'] ?? new Date().toLocaleString('en-us', {year: 'numeric', month: '2-digit', day: '2-digit'}).replace(/(\d+)\/(\d+)\/(\d+)/, '$3-$1-$2');
     document.getElementById('daysPerStep').value = queryParams['step'] ?? 7;
+    document.getElementById('minDataCompleteness').value = queryParams['minDataCompleteness'] ?? 0;
 
     colorScheme = queryParams['scheme'] ?? queryParams['colorscheme'] ?? 'tol-rainbow'
 	
@@ -122,6 +123,7 @@ function updateChart() {
     let start = new Date(document.getElementById('start').value);
     let end = new Date(document.getElementById('end').value);
     let daysPerStep = Number.parseInt(document.getElementById('daysPerStep').value);
+    let minDataCompleteness = Number.parseInt(document.getElementById('minDataCompleteness').value);
 
     // Check if inputs are valid and fix if necessary
     if(start > end) {
@@ -132,8 +134,12 @@ function updateChart() {
         daysPerStep = 1;
         document.getElementById('daysPerStep').value = daysPerStep;
     }
+    if(minDataCompleteness < 0 || minDataCompleteness > 100) {
+        minDataCompleteness = 0;
+        document.getElementById('minDataCompleteness').value = minDataCompleteness;
+    }
 
-    buildChart(start, end, daysPerStep);
+    buildChart(start, end, daysPerStep, minDataCompleteness);
 
     updateBtn.disabled = false;
 }
@@ -162,7 +168,7 @@ function setFetchStatus(successCounter, failedCounter, allCounter) {
         ")");
 }
 
-function buildChart(start, end, daysPerStep) {
+function buildChart(start, end, daysPerStep, minDataCompleteness) {
     showStatus();
     setStatus("Updating...");
 
@@ -221,8 +227,6 @@ function buildChart(start, end, daysPerStep) {
 
         var dates = dateData.map(x => x.date);
 
-        var minCount = Number.MAX_SAFE_INTEGER
-
         var branchDataMap = new Map();
         dateData.forEach(dd => {
             dd.data.forEach(bd => {
@@ -230,14 +234,18 @@ function buildChart(start, end, daysPerStep) {
 
                 dateMap.set(dd.date, bd.count);
 
-                minCount = Math.min(minCount, bd.count);
-
                 branchDataMap.set(bd.DefaultBranch, dateMap)
             });
         });
         
+        if(minDataCompleteness > 0) {
+            let maxValue = Math.max(...Array.from(branchDataMap, ([,v]) => v.size)) * minDataCompleteness / 100;
+            branchDataMap = new Map([...branchDataMap].filter(([, v]) => v.size >= maxValue));
+        }
+
         var colors = palette(colorScheme, branchDataMap.size).map(hex => '#' + hex);
         var dataSets = [];
+        var minCount = Number.MAX_SAFE_INTEGER
         for (var [key, value] of branchDataMap.entries()) {
 
             var data = [];
@@ -245,6 +253,8 @@ function buildChart(start, end, daysPerStep) {
                 var parsed = parseInt(value.get(date));
                 if(!parsed)
                     parsed = 0;
+                else
+                    minCount = Math.min(minCount, parsed);
                 data.push(parsed);
             });
 
@@ -272,8 +282,7 @@ function buildChart(start, end, daysPerStep) {
     }, function(err) {
         showStatus();
         setStatus('Error: ' + err);
-        console.log("Error processing promises")
-        console.error(err);
+        console.error("Error processing promises", err);
     });
 }
 

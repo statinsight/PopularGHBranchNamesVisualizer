@@ -74,6 +74,10 @@
                 flex: 1 1 auto;
                 min-height: 0;
             }
+
+            #updatebtn {
+                margin-left: 0.5em;
+            }
         </style>
     </head>
     <body>
@@ -90,6 +94,9 @@
                         <td>
                             <label>Days per Step</label>
                         </td>
+                        <td>
+                            <label>Min. data completeness %</label>
+                        </td>
                         <td></td>
                     </tr>
                     <tr>
@@ -100,7 +107,10 @@
                             <input type="date" id="end" name="end">
                         </td>
                         <td>
-                            <input type="number" id="daysPerStep" name="daysPerStep" style="width: 4em;">
+                            <input type="number" id="daysPerStep" name="daysPerStep" min="1" style="width: 4em;">
+                        </td>
+                        <td>
+                            <input type="number" id="minDataCompleteness" name="minDataCompleteness" min="0" max="100" style="width: 4em;">
                         </td>
                         <td>
                             <button type="button" id="updatebtn" onclick="updateChart()">Update</button>
