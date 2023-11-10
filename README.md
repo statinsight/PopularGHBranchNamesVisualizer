@@ -7,6 +7,7 @@ Visualizes the data of [statinsight/PopularGHBranchNames](https://github.com/sta
 | ``start`` | Sets the start date into the config | current date - 1 year | A date before the ``end``-date<br/>Example: ``2021-01-01`` |
 | ``end`` | Sets the end date into the config | current date | A date after the ``start``-date<br/>Example: ``2022-01-01`` |
 | ``step`` | Sets the daysPerStep into the config | ``7`` | A positive integer<br/>Example: ``2`` |
+| ``minDataCompleteness`` | Sets the minimum data completeness (in percent) into the config | ``0`` | ``0-100``<br/>Example: ``0`` - shows all branches; even when they are only present on a single day<br/>``100`` - hides all branches with incomplete data |
 | ``searchnow``<br>``exec`` | Executes the search when the page is loaded | - | - |
 | ``hideconfig``<br>``fullscreen`` | Hides the config / Fullscreen mode | - | - |
 | ``theme`` | Overrides the theming | Depends on browser setting | ``light``, ``dark`` |
