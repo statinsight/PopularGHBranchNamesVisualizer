@@ -8,6 +8,9 @@ var config = {
     options: {
         responsive: true,
         maintainAspectRatio: false,
+        animation: {
+            duration: 0
+        },
         title: {
             display: true,
             text: 'Most popular GH Repository Branches (with each repo > 1000 🌠)'
