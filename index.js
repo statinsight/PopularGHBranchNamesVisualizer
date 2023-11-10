@@ -16,24 +16,24 @@ var config = {
             labels: {}
         },
         scales: {
-            xAxes: [{
+            x: {
                 display: true,
                 pointLabels: {},
-                gridLines: {},
-                ticks: {},
-            }],
-            yAxes: [{
+                grid: {},
+                ticks: {}
+            },
+            y: {
                 display: true,
                 type: 'logarithmic',
-                gridLines: {
-                    borderDash: [2, 2]
+                grid: {
+                    tickBorderDash: [2, 2]
                 },
                 ticks: {
                     callback: function (value, index, values) {
                         return Number(value.toString());
                     }
                 }
-            }]
+            }
         }
     }
 };
@@ -91,20 +91,22 @@ function init() {
 
     colorScheme = queryParams['scheme'] ?? queryParams['colorscheme'] ?? 'tol-rainbow'
 	
-	if(queryParams.hasOwnProperty('searchnow') || queryParams.hasOwnProperty('exec')) {
-        updateChart();
-    }
-
     if (queryParams['theme'] == 'light') {
         setTheme('light');
     }
     else if (queryParams['theme'] == 'dark' || window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
         setTheme('dark');
     }
+
+	if(queryParams.hasOwnProperty('searchnow') || queryParams.hasOwnProperty('exec')) {
+        updateChart();
+    }
 }
 
 function setTheme(theme) {
     document.documentElement.setAttribute('data-theme', theme);
+    Chart.defaults.color = getComputedStyle(document.documentElement).getPropertyValue('--text-color');
+    Chart.defaults.borderColor = 'rgb(130,130,130)';
 }
 
 function updateChart() {
@@ -252,23 +254,7 @@ function buildChart(start, end, daysPerStep) {
 
         setStatus("Building chart...");
 
-        
-        if(document.documentElement.getAttribute('data-theme') == 'dark') {
-            let compstyle = getComputedStyle(document.documentElement);
-
-            let textcolor = compstyle.getPropertyValue('--text-color');
-            let gridLineColor = 'rgb(130,130,130)';
-
-            config.options.title.fontColor = textcolor;
-            config.options.legend.labels.fontColor = textcolor;
-
-            [config.options.scales.yAxes[0], config.options.scales.xAxes[0]].forEach(axis => {
-                axis.ticks.fontColor = textcolor;
-                axis.gridLines.color = gridLineColor;
-            });
-        }
-
-        config.options.scales.yAxes[0].ticks.min = minCount;
+        config.options.scales.y.suggestedMin = minCount;
         config.data = {
             labels: dates,
             datasets: dataSets
