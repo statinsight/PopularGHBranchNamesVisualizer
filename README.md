@@ -12,3 +12,7 @@ Visualizes the data of [statinsight/PopularGHBranchNames](https://github.com/sta
 | ``hideconfig``<br>``fullscreen`` | Hides the config / Fullscreen mode | - | - |
 | ``theme`` | Overrides the theming | Depends on browser setting | ``light``, ``dark`` |
 | ``scheme``<br>``colorscheme`` | Set's the scheme | ``tol-rainbow`` | See the [palette.js docs](https://github.com/google/palette.js/blob/79a703df344e3b24380ce1a211a2df7f2d90ca22/palette.js#L534-L594) <br/> or run ``palette.listSchemes('all').map(x => x.scheme_name)`` in the browser console | 
+
+Examples:
+* [Show fullscreen summary since start of records](https://statinsight.github.io/PopularGHBranchNamesVisualizer/?exec&start=2020-11-01&step=20&minDataCompleteness=50&fullscreen)
+* [Different color scheme](https://statinsight.github.io/PopularGHBranchNamesVisualizer/?exec&colorscheme=tol-dv)
