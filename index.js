@@ -11,9 +11,11 @@ var config = {
         animation: {
             duration: 0
         },
-        title: {
-            display: true,
-            text: 'Most popular GH Repository Branches (with each repo > 1000 🌠)'
+        plugins: {
+            title: {
+                display: true,
+                text: 'Most popular GH Repository Branches (with each repo > 1000 🌠)'
+            }
         },
         legend: {
             labels: {}
