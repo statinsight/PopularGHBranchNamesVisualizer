@@ -260,6 +260,7 @@ function buildChart(start, end, daysPerStep) {
             datasets: dataSets
         };
 
+        window?.lineChart?.destroy();
         window.lineChart = new Chart(ctx, config);
 
         hideStatus();
