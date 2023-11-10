@@ -87,7 +87,7 @@ function init() {
     priorDate.setDate(new Date().getDate()-365);
 
     if(queryParams.hasOwnProperty('hideconfig') || queryParams.hasOwnProperty('fullscreen')) {
-        document.getElementById('config').hidden = true;
+        document.getElementById('config').style.display = 'none';
     }
 
     document.getElementById('start').value = queryParams['start'] ?? priorDate.toLocaleString('en-us', {year: 'numeric', month: '2-digit', day: '2-digit'}).replace(/(\d+)\/(\d+)\/(\d+)/, '$3-$1-$2');
