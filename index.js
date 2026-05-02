@@ -14,7 +14,7 @@ var config = {
         plugins: {
             title: {
                 display: true,
-                text: 'Most popular GH Repository Branches (with each repo > 1000 🌠)'
+                text: 'Most popular (default) GH Repo Branchnames (with each repo > 1000 🌠)'
             }
         },
         legend: {
